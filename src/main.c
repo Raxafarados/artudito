@@ -12,21 +12,32 @@ int main(void) {
   // lcd_goto(3,0);
   // lcd_write_str("skibidi pop");
 
-
+  uint8_t butt1;
+ 
   while (1) {
-      write_pin(&PORTB,PB5,1);
-      _delay_ms(500);
-      write_pin(&PORTB,PB5,0);
-      _delay_ms(500);
+    
+
+      butt1 = read_pin(&PIND, PD7);
+      
+
+
+      write_pin(&PORTB,PB5,butt1);
+      
   }
 }
 
 
-
+//      TODO
+//  1. Wprowadzić SetPinIn / SetPinOut
 
 void setup(){
   //lcd_init(LCD_ADDR);
   DDRB |= (1 << PB5);  // PB5(D13) jako wyjście 
+  DDRB |= (1 << PB4);  // d12 wyjście
+  DDRD &= ~(1 << PD7); //d7 wejście
+  DDRD &= ~(1 << PD6); // d6 wejście
+
+  PORTD |= (1 << PD7); //pull-up
   
 }
 

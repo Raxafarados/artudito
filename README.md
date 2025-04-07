@@ -4,8 +4,8 @@
 Pinout for now:
 | Arduino Pin | Out |
 | ----------- | ----------- |
-| A4 | LCD_SDA |
-| A5 | LCD_SCL |
+| SDA | LCD_SDA |
+| SCL | LCD_SCL |
 | led1 | ? |
 | led2 | ? |
 | led3 | ? |
