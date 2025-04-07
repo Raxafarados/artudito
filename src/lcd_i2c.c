@@ -15,7 +15,7 @@ void lcd_send(uint8_t data, uint8_t rs) {
         low | rs | backlight | 0x04,
         low | rs | backlight
     };
-
+    
     i2c_start();
     i2c_write(lcd_addr);
     for (uint8_t i = 0; i < 4; i++) {
@@ -37,6 +37,11 @@ void lcd_write_str(const char* str) {
     while (*str) {
         lcd_write_char(*str++);
     }
+}
+
+void lcd_clear(void) {
+    lcd_send(0x01, 0);
+    _delay_ms(2);
 }
 
 void lcd_goto(uint8_t row, uint8_t col) {
