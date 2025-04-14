@@ -12,16 +12,14 @@ int main(void) {
   // lcd_goto(3,0);
   // lcd_write_str("skibidi pop");
 
-  uint8_t butt1;
+  //uint8_t butt1;
  
   while (1) {
-    
 
-      butt1 = read_pin(&PIND, PD7);
-      
-
-
-      write_pin(&PORTB,PB5,butt1);
+    write_pin(&PORTD,PD5,1);
+    _delay_ms(500);
+    write_pin(&PORTD,PD5,0);
+    _delay_ms(500);
       
   }
 }
@@ -32,17 +30,41 @@ int main(void) {
 
 void setup(){
   //lcd_init(LCD_ADDR);
-  DDRB |= (1 << PB5);  // PB5(D13) jako wyjście 
-  DDRB |= (1 << PB4);  // d12 wyjście
-  DDRD &= ~(1 << PD7); //d7 wejście
-  DDRD &= ~(1 << PD6); // d6 wejście
+  set_pin_out(&DDRD, PD5);
 
-  PORTD |= (1 << PD7); //pull-up
-  
+  //PORTD |= (1 << PD7); //pull-up
 }
 
+//         ARDUINO
+//       PRO MICRO
+//
+//  |        PINY           |
+//  |AVR      |  ARDUINO    |
+//  |---------|-------------|
+//  |PB0      |     D17     |  (SS)     (RXLED, nie wyprowadzony na header)
+//  |PB1      |     D15     |  (SCK)
+//  |PB2      |     D16     |  (MOSI)
+//  |PB3      |     D14     |  (MISO)
+//  |PB4      |     D8      |  (TXLED, nie wyprowadzony na header)
+//  |PB5      |     D9      |
+//  |PC6      |     D5      |
+//  |PD0      |     D3      |
+//  |PD1      |     D2      |
+//  |PD2      |     D0      |  (RX)
+//  |PD3      |     D1      |  (TX)
+//  |PD4      |     D4      |
+//  |PD5      |     D6      |  (LED_BUILTIN na Pro Micro!)
+//  |PD6      |     D7      |
+//  |PD7      |     D10     |
+//  |PE6      |     D7      |  (tak, też czasem jako alternatywa)
+//  |PF4      |     A3      |
+//  |PF5      |     A2      |
+//  |PF6      |     A1      |
+//  |PF7      |     A0      |
 
-
+//         ARDUINO
+//           UNO
+//  
 //  |        PINY           |
 //  |AVR      |     ARDUINO |
 //  |---------|-------------|
