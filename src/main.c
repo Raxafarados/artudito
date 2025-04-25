@@ -7,7 +7,7 @@ int main(void) {
   lcd_write_str("Kinda sus");
   lcd_goto(0, 10);
   lcd_write_char(2);
-  
+
 
   //uint8_t butt1;
  
@@ -27,13 +27,7 @@ int main(void) {
 void setup(){
   lcd_init(LCD_ADDR);
   set_pin_out(&DDRD, PD5);
-
-  
-
-  
-
-  
-
+    
   //PORTD |= (1 << PD7); //pull-up
 }
 
