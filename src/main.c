@@ -3,34 +3,36 @@
 int main(void) {
   setup();
 
-  // lcd_goto(0, 0);
-  // lcd_write_str("Siema Joł");
-  // lcd_goto(1, 0);
-  // lcd_write_str("Bober kurwa");
-  // lcd_goto(2,0);
-  // lcd_write_str("xd");
-  // lcd_goto(3,0);
-  // lcd_write_str("skibidi pop");
+  lcd_goto(0, 0);
+  lcd_write_str("Kinda sus");
+  lcd_goto(0, 10);
+  lcd_write_char(2);
+  
 
   //uint8_t butt1;
  
   while (1) {
 
     write_pin(&PORTD,PD5,1);
-    _delay_ms(500);
+    _delay_ms(200);
     write_pin(&PORTD,PD5,0);
-    _delay_ms(500);
+    _delay_ms(200);
       
   }
 }
 
 
-//      TODO
-//  1. Wprowadzić SetPinIn / SetPinOut
+
 
 void setup(){
-  //lcd_init(LCD_ADDR);
+  lcd_init(LCD_ADDR);
   set_pin_out(&DDRD, PD5);
+
+  
+
+  
+
+  
 
   //PORTD |= (1 << PD7); //pull-up
 }
@@ -48,8 +50,8 @@ void setup(){
 //  |PB4      |     D8      |  (TXLED, nie wyprowadzony na header)
 //  |PB5      |     D9      |
 //  |PC6      |     D5      |
-//  |PD0      |     D3      |
-//  |PD1      |     D2      |
+//  |PD0      |     D3      |   SCL     [Wyswietlacz LCD]
+//  |PD1      |     D2      |   SDA     [Wyswietlacz LCD]
 //  |PD2      |     D0      |  (RX)
 //  |PD3      |     D1      |  (TX)
 //  |PD4      |     D4      |

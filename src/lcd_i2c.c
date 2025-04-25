@@ -5,6 +5,39 @@
 static uint8_t lcd_addr;
 static uint8_t backlight = 0x08; // Backlight ON
 
+uint8_t smiley[8] = {
+    0b00000,
+    0b01010,
+    0b01010,
+    0b00000,
+    0b00000,
+    0b10001,
+    0b01110,
+    0b00000
+  };
+
+  uint8_t gtfback[8] = {
+    0b00100,
+    0b01110,
+    0b11111,
+    0b00100,
+    0b00100,
+    0b00111,
+    0b00000,
+    0b00000
+  };
+
+  uint8_t amogus[8] = {
+    0b00000,
+    0b01110,
+    0b00010,
+    0b01111,
+    0b01111,
+    0b01110,
+    0b01010,
+    0b00000
+  };
+
 void lcd_send(uint8_t data, uint8_t rs) {
     uint8_t high = data & 0xF0;
     uint8_t low = (data << 4) & 0xF0;
@@ -67,6 +100,16 @@ void lcd_init(uint8_t addr) {
     lcd_write_cmd(0x06); // Entry mode
     lcd_write_cmd(0x01); // Clear
     _delay_ms(2);
+///     Custom chars
+    lcd_write_cmd(0x40);
+    for (int i = 0; i < 8; i++)
+        lcd_write_char(smiley[i]);// char 0
+    for (int i = 0; i < 8; i++)
+        lcd_write_char(gtfback[i]);//char 1
+    for (int i = 0; i < 8; i++)
+        lcd_write_char(amogus[i]);//char 2
+
+    lcd_write_cmd(0x80);
 }
 
 
