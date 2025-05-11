@@ -26,32 +26,41 @@ int main(void) {
 
 void setup(){
   lcd_init(LCD_ADDR);
-  set_pin_out(&DDRD, PD5);
+  set_pin_out(&DDRC, PC6);  //ERROR DIODE
+  set_pin_out(&DDRD, PD4);  //ALERT DIODE
+
+  set_pin_in_pullup(&DDRD, &PORTD, PD5);   //BACK KEY
+  set_pin_in_pullup(&DDRD, &PORTD, PD6);   //ENTER KEY
+  set_pin_in_pullup(&DDRB, &PORTB, PB4);   //DOWN KEY
+  set_pin_in_pullup(&DDRB, &PORTB, PB5);   //UP KEY
+
+  set_pin_out(&DDRB, PB2);   //SELECT DISK
+  set_pin_out(&DDRD, PD7);   //POWER DISK
     
-  //PORTD |= (1 << PD7); //pull-up
+  
 }
 
 //         ARDUINO
 //       PRO MICRO
 //
 //  |        PINY           |
-//  |AVR      |  ARDUINO    |
+//  |AVR      |  PRO MICRO  |
 //  |---------|-------------|
 //  |PB0      |     D17     |  (SS)     (RXLED, nie wyprowadzony na header)
 //  |PB1      |     D15     |  (SCK)
-//  |PB2      |     D16     |  (MOSI)
+//  |PB2      |     D16     |  (MOSI)                                 [SELECT DISK]
 //  |PB3      |     D14     |  (MISO)
-//  |PB4      |     D8      |  (TXLED, nie wyprowadzony na header)
-//  |PB5      |     D9      |
-//  |PC6      |     D5      |
-//  |PD0      |     D3      |   SCL     [Wyswietlacz LCD]
-//  |PD1      |     D2      |   SDA     [Wyswietlacz LCD]
+//  |PB4      |     D8      |  (TXLED, nie wyprowadzony na header)    [DOWN KEY]
+//  |PB5      |     D9      |                                         [UP KEY]
+//  |PC6      |     D5      |                                         [ERROR DIODE]
+//  |PD0      |     D3      |   SCL   [Wyswietlacz LCD]
+//  |PD1      |     D2      |   SDA   [Wyswietlacz LCD]
 //  |PD2      |     D0      |  (RX)
 //  |PD3      |     D1      |  (TX)
-//  |PD4      |     D4      |
-//  |PD5      |     D6      |  (LED_BUILTIN na Pro Micro!)
-//  |PD6      |     D7      |
-//  |PD7      |     D10     |
+//  |PD4      |     D4      |                                         [ALERT DIODE]
+//  |PD5      |     D6      |  (LED_BUILTIN na Pro Micro!)            [BACK KEY]
+//  |PD6      |     D7      |                                         [ENTER KEY]
+//  |PD7      |     D10     |                                         [POWER DISK]
 //  |PE6      |     D7      |  (tak, też czasem jako alternatywa)
 //  |PF4      |     A3      |
 //  |PF5      |     A2      |
