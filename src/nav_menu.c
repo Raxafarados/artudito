@@ -1,17 +1,18 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-const char *menu_strings[MENU_COUNT] = {
+const char *menu_strings[MENU_COUNT+1] = {
     "Main Menu",
     "Select Mode",
-    "Select Mode Auto",
-    "Select Mode Manual",
+    "Auto",
+    "Manual",
     "Capitan Log",
-    "Capitan Log Error Log",
-    "Capitan Log History",
+    "Error Log",
+    "History",
     "Settings",
-    "Settings Backup Time",
-    "Settings Date"
+    "Backup Time",
+    "Date",
+    ""
 };
 
 typedef enum {
@@ -29,10 +30,11 @@ typedef enum {
 } MenuState;
 
 MenuState current_menu = MENU_MAIN;
+MenuState previous_menu = MENU_COUNT;
 
 void handle_menu_navigation() {
     if (read_pin(&PIND, PD5) == 0) { // BACK KEY
-        menu_prev();
+        menu_back();
     } else if (read_pin(&PIND, PD6) == 0) { // ENTER KEY
         menu_select();
     } else if (read_pin(&PINB, PB4) == 0) { // DOWN KEY
@@ -45,6 +47,11 @@ void handle_menu_navigation() {
 void display_menu() {
     lcd_clear();
     if (current_menu >= 0 && current_menu < MENU_COUNT) {
+        lcd_goto(0, 0);
+        lcd_write_char(1); // Previous menu
+        lcd_write_str(menu_strings[previous_menu]);
+        lcd_goto(1, 0);
+        lcd_write_char(2); // Current menu
         lcd_write_str(menu_strings[current_menu]);
     } else {
         lcd_write_str("Unknown Menu");
@@ -52,26 +59,8 @@ void display_menu() {
 }
 
 void menu_next() {
-    if (current_menu < MENU_COUNT - 1) {
-        current_menu++;
-    } else {
-        current_menu = 0; // Wracamy do początku
-    }
-    display_menu();
-}
-void menu_prev() {
-    if (current_menu > 0) {
-        current_menu--;
-    } else {
-        current_menu = MENU_COUNT - 1; // Wracamy do końca
-    }
-    display_menu();
-}
-void menu_select() {
     switch (current_menu) {
-        case MENU_MAIN:
-            current_menu = MENU_SELECT_MODE;
-            break;
+        //FIRST LEVEL
         case MENU_SELECT_MODE:
             current_menu = MENU_CAPITAN_LOG;
             break;
@@ -79,7 +68,93 @@ void menu_select() {
             current_menu = MENU_SETTINGS;
             break;
         case MENU_SETTINGS:
-            current_menu = MENU_MAIN;
+            current_menu = MENU_SELECT_MODE;
+            break;
+        //SECOND LEVEL
+            //SUB MENU SELECT_MODE
+        case MENU_SELECT_MODE_AUTO:
+            current_menu = MENU_SELECT_MODE_MANUAL;
+            break;
+        case MENU_SELECT_MODE_MANUAL:
+            current_menu = MENU_SELECT_MODE_AUTO;
+            break;
+            //SUB MENU CAPITAN_LOG
+        case MENU_CAPITAN_LOG_ERROR_LOG:
+            current_menu = MENU_CAPITAN_LOG_HISTORY;
+            break;
+            //SUB MENU SETTINGS
+        case MENU_SETTINGS_BACKUP_TIME:
+            current_menu = MENU_SETTINGS_DATE;
+            break;
+        case MENU_SETTINGS_DATE:
+            current_menu = MENU_SETTINGS_BACKUP_TIME;
+            break;
+        default:
+            current_menu = MENU_MAIN; // Wracamy do głównego menu
+            break;
+    } 
+    display_menu();
+}
+void menu_prev() {
+    switch (current_menu) {
+        //FIRST LEVEL
+        case MENU_SELECT_MODE:
+            current_menu = MENU_SETTINGS;
+            break;
+        case MENU_CAPITAN_LOG:
+            current_menu = MENU_SELECT_MODE;
+            break;
+        case MENU_SETTINGS:
+            current_menu = MENU_CAPITAN_LOG;
+            break;
+        //SECOND LEVEL
+            //SUB MENU SELECT_MODE
+        case MENU_SELECT_MODE_AUTO:
+            current_menu = MENU_SELECT_MODE_MANUAL;
+            break;
+        case MENU_SELECT_MODE_MANUAL:
+            current_menu = MENU_SELECT_MODE_AUTO;
+            break;
+            //SUB MENU CAPITAN_LOG
+        case MENU_CAPITAN_LOG_HISTORY:
+            current_menu = MENU_CAPITAN_LOG_ERROR_LOG;
+            break;
+        case MENU_CAPITAN_LOG_ERROR_LOG:
+            current_menu = MENU_CAPITAN_LOG_HISTORY;
+            break;
+            //SUB MENU SETTINGS
+        case MENU_SETTINGS_BACKUP_TIME:
+            current_menu = MENU_SETTINGS_DATE;
+            break;
+        case MENU_SETTINGS_DATE:
+            current_menu = MENU_SETTINGS_BACKUP_TIME;
+            break;
+        default:
+            current_menu = MENU_MAIN; // Wracamy do głównego menu
+            break;
+    }
+
+    display_menu();
+}
+void menu_select() {
+    switch (current_menu) {
+        //ZERO LEVEL
+        case MENU_MAIN:
+            current_menu = MENU_SELECT_MODE;
+            previous_menu= MENU_MAIN;
+            break;
+        //FIRST LEVEL
+        case MENU_CAPITAN_LOG:
+            current_menu = MENU_CAPITAN_LOG_HISTORY;
+            previous_menu= MENU_CAPITAN_LOG;
+            break;
+        case MENU_SETTINGS:
+            current_menu = MENU_SETTINGS_BACKUP_TIME;
+            previous_menu= MENU_SETTINGS;
+            break;        
+        case MENU_SELECT_MODE:
+            current_menu = MENU_SELECT_MODE_AUTO;
+            previous_menu= MENU_SELECT_MODE;
             break;
         default:
             break;
@@ -88,17 +163,53 @@ void menu_select() {
 }
 void menu_back() {
     switch (current_menu) {
+        //FIRST LEVEL
         case MENU_SELECT_MODE:
             current_menu = MENU_MAIN;
+            previous_menu= MENU_COUNT;
             break;
         case MENU_CAPITAN_LOG:
-            current_menu = MENU_SELECT_MODE;
+            current_menu = MENU_MAIN;
+            previous_menu= MENU_COUNT;
             break;
         case MENU_SETTINGS:
-            current_menu = MENU_CAPITAN_LOG;
+            current_menu = MENU_MAIN;
+            previous_menu= MENU_COUNT;
             break;
+        //SECOND LEVEL
+            //SUB MENU SELECT_MODE
+        case MENU_SELECT_MODE_AUTO:
+            current_menu = MENU_SELECT_MODE;
+            previous_menu= MENU_MAIN;
+            break;
+        case MENU_SELECT_MODE_MANUAL:
+            current_menu = MENU_SELECT_MODE;
+            previous_menu= MENU_MAIN;
+            break;
+            //SUB MENU CAPITAN_LOG
+        case MENU_CAPITAN_LOG_ERROR_LOG:
+            current_menu = MENU_CAPITAN_LOG;
+            previous_menu= MENU_MAIN;
+            break;
+        case MENU_CAPITAN_LOG_HISTORY:
+            current_menu = MENU_CAPITAN_LOG;
+            previous_menu= MENU_MAIN;
+            break;
+            //SUB MENU SETTINGS
+        case MENU_SETTINGS_BACKUP_TIME:
+            current_menu = MENU_SETTINGS;
+            previous_menu= MENU_MAIN;
+            break;
+        case MENU_SETTINGS_DATE:
+            current_menu = MENU_SETTINGS;
+            previous_menu= MENU_MAIN;
+            break;
+        
         default:
+            current_menu = MENU_MAIN;
+            previous_menu= MENU_COUNT;
             break;
     }
+    
     display_menu();
 }

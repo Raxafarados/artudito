@@ -38,6 +38,17 @@ uint8_t smiley[8] = {
     0b00000
   };
 
+    uint8_t enter[8] = {
+    0b00000,
+    0b00000,
+    0b00100,
+    0b00110,
+    0b11111,
+    0b00110,
+    0b00100,
+    0b00000
+  };
+
 void lcd_send(uint8_t data, uint8_t rs) {
     uint8_t high = data & 0xF0;
     uint8_t low = (data << 4) & 0xF0;
@@ -108,6 +119,8 @@ void lcd_init(uint8_t addr) {
         lcd_write_char(gtfback[i]);//char 1
     for (int i = 0; i < 8; i++)
         lcd_write_char(amogus[i]);//char 2
+    for (int i = 0; i < 8; i++) 
+        lcd_write_char(enter[i]);//char 3
 
     lcd_write_cmd(0x80);
 }
