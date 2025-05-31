@@ -1,5 +1,12 @@
 #include "main.h"
 
+uint8_t buttonUPlaststate= 1; // Stan przycisku UP na początku
+uint8_t buttonDOWNlaststate= 1; // Stan przycisku DOWN na początku
+uint8_t buttonBACKlaststate= 1; // Stan przycisku BACK na początku
+uint8_t buttonENTERlaststate= 1; // Stan przycisku ENTER na początku
+uint8_t diode1= 1; // Flaga diody, która będzie migać
+uint8_t diode2 = 1; // Flaga diody, która będzie migać
+
 int main(void) {
   setup();
 
@@ -8,15 +15,20 @@ int main(void) {
   lcd_goto(0, 10);
   lcd_write_char(2);
 
+    write_pin(&DDRC, PC6, 0); // ERROR DIODE 
+    write_pin(&DDRD, PD4, 1); // ALERT DIODE 
 
-  //uint8_t butt1;
+  _delay_ms(1000);
+  lcd_clear(); 
+  display_menu();
  
-  while (1) {
+  while (1) {    
+    
 
-    write_pin(&PORTD,PD5,1);
-    _delay_ms(200);
-    write_pin(&PORTD,PD5,0);
-    _delay_ms(200);
+
+
+    handle_menu_navigation();
+
       
   }
 }
@@ -29,13 +41,13 @@ void setup(){
   set_pin_out(&DDRC, PC6);  //ERROR DIODE
   set_pin_out(&DDRD, PD4);  //ALERT DIODE
 
-  set_pin_in_pullup(&DDRD, &PORTD, PD5);   //BACK KEY
-  set_pin_in_pullup(&DDRD, &PORTD, PD6);   //ENTER KEY
+  set_pin_in_pullup(&DDRD, &PORTD, PD7);   //BACK KEY
+  set_pin_in_pullup(&DDRD, &PORTE, PE6);   //ENTER KEY
   set_pin_in_pullup(&DDRB, &PORTB, PB4);   //DOWN KEY
   set_pin_in_pullup(&DDRB, &PORTB, PB5);   //UP KEY
 
   set_pin_out(&DDRB, PB2);   //SELECT DISK
-  set_pin_out(&DDRD, PD7);   //POWER DISK
+  set_pin_out(&DDRB, PB6);   //POWER DISK
     
   
 }
@@ -58,10 +70,9 @@ void setup(){
 //  |PD2      |     D0      |  (RX)
 //  |PD3      |     D1      |  (TX)
 //  |PD4      |     D4      |                                         [ALERT DIODE]
-//  |PD5      |     D6      |  (LED_BUILTIN na Pro Micro!)            [BACK KEY]
-//  |PD6      |     D7      |                                         [ENTER KEY]
-//  |PD7      |     D10     |                                         [POWER DISK]
-//  |PE6      |     D7      |  (tak, też czasem jako alternatywa)
+//  |PD7      |     D6      |  (LED_BUILTIN na Pro Micro!)            [BACK KEY]
+//  |PE6      |     D7      |                                         [ENTER KEY]
+//  |PB6      |     D10     |                                         [POWER DISK]
 //  |PF4      |     A3      |
 //  |PF5      |     A2      |
 //  |PF6      |     A1      |

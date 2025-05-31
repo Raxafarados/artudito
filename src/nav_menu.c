@@ -1,19 +1,12 @@
 #include <avr/io.h>
 #include <util/delay.h>
 
-const char *menu_strings[MENU_COUNT+1] = {
-    "Main Menu",
-    "Select Mode",
-    "Auto",
-    "Manual",
-    "Capitan Log",
-    "Error Log",
-    "History",
-    "Settings",
-    "Backup Time",
-    "Date",
-    ""
-};
+
+extern uint8_t buttonUPlaststate;
+extern uint8_t buttonDOWNlaststate;
+extern uint8_t buttonBACKlaststate;
+extern uint8_t buttonENTERlaststate;
+
 
 typedef enum {
     MENU_MAIN,
@@ -29,23 +22,56 @@ typedef enum {
     MENU_COUNT // ostatnia wartość — ilość elementów
 } MenuState;
 
+const char *menu_strings[MENU_COUNT+1] = {
+    "Main Menu",
+    "Select Mode",
+    "Auto",
+    "Manual",
+    "Capitan Log",
+    "Error Log",
+    "History",
+    "Settings",
+    "Backup Time",
+    "Date",
+    ""
+};
+
+
+
 MenuState current_menu = MENU_MAIN;
 MenuState previous_menu = MENU_COUNT;
 
+
+
+
 void handle_menu_navigation() {
-    if (read_pin(&PIND, PD5) == 0) { // BACK KEY
+    if (       read_pin(&PIND, PD7) == 0 && buttonBACKlaststate == 1) { // BACK KEY
         menu_back();
-    } else if (read_pin(&PIND, PD6) == 0) { // ENTER KEY
+        lcd_clear();
+        display_menu();
+    } else if (read_pin(&PINE, PE6) == 0 && buttonENTERlaststate == 1) { // ENTER KEY
         menu_select();
-    } else if (read_pin(&PINB, PB4) == 0) { // DOWN KEY
+        lcd_clear();
+        display_menu();
+    } else if (read_pin(&PINB, PB4) == 0 && buttonDOWNlaststate == 1) { // DOWN KEY
         menu_next();
-    } else if (read_pin(&PINB, PB5) == 0) { // UP KEY
+        lcd_clear();
+        display_menu();
+    } else if (read_pin(&PINB, PB5) == 0 && buttonUPlaststate == 1) { // UP KEY
         menu_prev();
+        lcd_clear();
+        display_menu();
     }
+    // Aktualizacja stanu przycisków
+    buttonUPlaststate = read_pin(&PINB, PB5);
+    buttonDOWNlaststate = read_pin(&PINB, PB4);
+    buttonENTERlaststate = read_pin(&PINE, PE6);
+    buttonBACKlaststate = read_pin(&PIND, PD7);
+
 }
 
 void display_menu() {
-    lcd_clear();
+    
     if (current_menu >= 0 && current_menu < MENU_COUNT) {
         lcd_goto(0, 0);
         lcd_write_char(1); // Previous menu
@@ -82,6 +108,9 @@ void menu_next() {
         case MENU_CAPITAN_LOG_ERROR_LOG:
             current_menu = MENU_CAPITAN_LOG_HISTORY;
             break;
+        case MENU_CAPITAN_LOG_HISTORY:
+            current_menu = MENU_CAPITAN_LOG_ERROR_LOG;
+            break;
             //SUB MENU SETTINGS
         case MENU_SETTINGS_BACKUP_TIME:
             current_menu = MENU_SETTINGS_DATE;
@@ -93,7 +122,7 @@ void menu_next() {
             current_menu = MENU_MAIN; // Wracamy do głównego menu
             break;
     } 
-    display_menu();
+    
 }
 void menu_prev() {
     switch (current_menu) {
@@ -134,7 +163,7 @@ void menu_prev() {
             break;
     }
 
-    display_menu();
+    
 }
 void menu_select() {
     switch (current_menu) {
@@ -159,7 +188,7 @@ void menu_select() {
         default:
             break;
     }
-    display_menu();
+    
 }
 void menu_back() {
     switch (current_menu) {
@@ -211,5 +240,5 @@ void menu_back() {
             break;
     }
     
-    display_menu();
+    
 }
