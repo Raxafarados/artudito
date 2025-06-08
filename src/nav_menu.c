@@ -1,5 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include "rw_pin.h"
+#include "OUT_PORTx.h"
 
 
 extern uint8_t buttonUPlaststate;
@@ -184,6 +186,22 @@ void menu_select() {
         case MENU_SELECT_MODE:
             current_menu = MENU_SELECT_MODE_AUTO;
             previous_menu= MENU_SELECT_MODE;
+            break;
+
+                    //sub menu auto/manual
+        case MENU_SELECT_MODE_AUTO:
+            write_pin(OUT_PORTB, PB2, 1);
+            break;
+        case MENU_SELECT_MODE_MANUAL:
+            write_pin(OUT_PORTB, PB2, 0);
+            break;
+
+                    //sub menu err/hist
+        case MENU_CAPITAN_LOG_ERROR_LOG:
+            write_pin(OUT_PORTB, PB6, 0);
+            break;
+        case MENU_CAPITAN_LOG_HISTORY:
+            write_pin(OUT_PORTB, PB6, 1);
             break;
         default:
             break;

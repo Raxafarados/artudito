@@ -1,4 +1,5 @@
 #include "main.h"
+//#include "UARTcomm.h"
 
 uint8_t buttonUPlaststate= 1; // Stan przycisku UP na początku
 uint8_t buttonDOWNlaststate= 1; // Stan przycisku DOWN na początku
@@ -7,16 +8,19 @@ uint8_t buttonENTERlaststate= 1; // Stan przycisku ENTER na początku
 uint8_t diode1= 1; // Flaga diody, która będzie migać
 uint8_t diode2 = 1; // Flaga diody, która będzie migać
 
-int main(void) {
+int main() {
   setup();
+  // UART initialization
+  //uart_init();
 
   lcd_goto(0, 0);
   lcd_write_str("Kinda sus");
   lcd_goto(0, 10);
   lcd_write_char(2);
 
-    write_pin(&DDRC, PC6, 0); // ERROR DIODE 
-    write_pin(&DDRD, PD4, 1); // ALERT DIODE 
+    write_pin(OUT_PORTC, PC6, 1);
+    write_pin(OUT_PORTD, PD4, 1);
+
 
   _delay_ms(1000);
   lcd_clear(); 
@@ -31,6 +35,7 @@ int main(void) {
 
       
   }
+  return 0;
 }
 
 
@@ -38,20 +43,22 @@ int main(void) {
 
 void setup(){
   lcd_init(LCD_ADDR);
-  set_pin_out(&DDRC, PC6);  //ERROR DIODE
-  set_pin_out(&DDRD, PD4);  //ALERT DIODE
+  set_pin_out(OUT_PORTC, PC6);  //ERROR DIODE
+  set_pin_out(OUT_PORTD, PD4);  //ALERT DIODE
+
+  
 
   set_pin_in_pullup(&DDRD, &PORTD, PD7);   //BACK KEY
   set_pin_in_pullup(&DDRD, &PORTE, PE6);   //ENTER KEY
   set_pin_in_pullup(&DDRB, &PORTB, PB4);   //DOWN KEY
   set_pin_in_pullup(&DDRB, &PORTB, PB5);   //UP KEY
 
-  set_pin_out(&DDRB, PB2);   //SELECT DISK
-  set_pin_out(&DDRB, PB6);   //POWER DISK
+  set_pin_out(OUT_PORTB, PB2);   //SELECT DISK
+  set_pin_out(OUT_PORTB, PB6);   //POWER DISK
     
   
 }
-
+// to do zamienione power disk z select disk
 //         ARDUINO
 //       PRO MICRO
 //
