@@ -69,6 +69,7 @@ void handle_menu_navigation() {
     buttonDOWNlaststate = read_pin(&PINB, PB4);
     buttonENTERlaststate = read_pin(&PINE, PE6);
     buttonBACKlaststate = read_pin(&PIND, PD7);
+    _delay_ms(100); // Debounce delay
 
 }
 
