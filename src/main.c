@@ -53,8 +53,8 @@ void setup(){
   set_pin_in_pullup(&DDRB, &PORTB, PB4);   //DOWN KEY
   set_pin_in_pullup(&DDRB, &PORTB, PB5);   //UP KEY
 
-  set_pin_out(OUT_PORTB, PB2);   //SELECT DISK
-  set_pin_out(OUT_PORTB, PB6);   //POWER DISK
+  set_pin_out(OUT_PORTB, PB2);   // POWER DISK
+  set_pin_out(OUT_PORTB, PB6);   // DISK SELECT
     
   
 }

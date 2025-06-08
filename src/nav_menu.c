@@ -1,6 +1,7 @@
 #include <avr/io.h>
 #include <util/delay.h>
 #include "rw_pin.h"
+#include "disk_management.h"
 #include "OUT_PORTx.h"
 
 
@@ -191,18 +192,18 @@ void menu_select() {
 
                     //sub menu auto/manual
         case MENU_SELECT_MODE_AUTO:
-            write_pin(OUT_PORTB, PB2, 1);
+            disk_selectB(); // Select disk B for auto mode
             break;
         case MENU_SELECT_MODE_MANUAL:
-            write_pin(OUT_PORTB, PB2, 0);
+            disk_selectA(); // Select disk A for manual mode
             break;
 
                     //sub menu err/hist
         case MENU_CAPITAN_LOG_ERROR_LOG:
-            write_pin(OUT_PORTB, PB6, 0);
+            disk_power_off(); // Power off the disk
             break;
         case MENU_CAPITAN_LOG_HISTORY:
-            write_pin(OUT_PORTB, PB6, 1);
+            disk_power_on(); // Power on the disk
             break;
         default:
             break;
