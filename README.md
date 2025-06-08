@@ -7,7 +7,7 @@
 |---------|-------------|--------------------------------------------|
 | PB0     | D17         | SS *(RXLED, nie wyprowadzony na header)*   |
 | PB1     | D15         | SCK                                        |
-| PB2     | D16         | MOSI       [SELECT DISK]                   |
+| PB2     | D16         | MOSI       [POWER DISK]                    |
 | PB3     | D14         | MISO                                       |
 | PB4     | D8          | TXLED      [DOWN KEY]                      |
 | PB5     | D9          |            [UP KEY]                        |
@@ -19,7 +19,7 @@
 | PD4     | D4          |            [ALERT DIODE]                   |
 | PD5     | D6          |            [BACK KEY]                      |
 | PD6     | D7          |            [ENTER KEY]                     |
-| PD7     | D10         |            [POWER DISK]                    |
+| PD7     | D10         |            [SELECT DISK]                   |
 | PE6     | D7          | *(tak, też czasem jako alternatywa)*       |
 | PF4     | A3          |                                            |
 | PF5     | A2          |                                            |

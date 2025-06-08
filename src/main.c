@@ -67,7 +67,7 @@ void setup(){
 //  |---------|-------------|
 //  |PB0      |     D17     |  (SS)     (RXLED, nie wyprowadzony na header)
 //  |PB1      |     D15     |  (SCK)
-//  |PB2      |     D16     |  (MOSI)                                 [SELECT DISK]
+//  |PB2      |     D16     |  (MOSI)                                 [POWER DISK]
 //  |PB3      |     D14     |  (MISO)
 //  |PB4      |     D8      |  (TXLED, nie wyprowadzony na header)    [DOWN KEY]
 //  |PB5      |     D9      |                                         [UP KEY]
@@ -79,7 +79,7 @@ void setup(){
 //  |PD4      |     D4      |                                         [ALERT DIODE]
 //  |PD7      |     D6      |  (LED_BUILTIN na Pro Micro!)            [BACK KEY]
 //  |PE6      |     D7      |                                         [ENTER KEY]
-//  |PB6      |     D10     |                                         [POWER DISK]
+//  |PB6      |     D10     |                                         [SELECT DISK]
 //  |PF4      |     A3      |
 //  |PF5      |     A2      |
 //  |PF6      |     A1      |
